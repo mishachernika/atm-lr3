@@ -1,0 +1,38 @@
+{
+  "bank": {
+    "max_pin_attempts": 3,
+    "daily_withdrawal_limit": 20000,
+    "gateway_retries": 2
+  },
+  "operations": {
+    "withdrawal": true,
+    "deposit": true,
+    "transfer": true,
+    "payment": true
+  },
+  "services": [
+    "Мобільний зв'язок",
+    "Інтернет"
+  ],
+  "cassettes": [
+    {
+      "id": 1,
+      "denomination": 500,
+      "count": 100
+    },
+    {
+      "id": 2,
+      "denomination": 200,
+      "count": 150
+    },
+    {
+      "id": 3,
+      "denomination": 100,
+      "count": 200
+    }
+  ],
+  "low_cash_threshold": 20,
+  "journal_path": ":memory:",
+  "service_key_sha256": "0917b13a9091915d54b6336f45909539cce452b3661b21f386418a257883b30a",
+  "update_key": "bank-demo-trusted-key"
+}
