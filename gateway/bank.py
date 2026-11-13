@@ -41,12 +41,18 @@ class BankSimulator:
         self._source: dict[str, AuthRequest] = {}
         self.security_events: list[str] = []
         self._lost_responses = 0
+        self._blocked: set[str] = set()                  # FR-03: блокування на боці банку
 
     def simulate_response_loss(self, count: int) -> None:
         """Стенд: банк виконує операцію, але відповідь до банкомата не доходить."""
         self._lost_responses = count
 
+    def block_card(self, card_number: str) -> None:
+        self._blocked.add(card_number)
+
     def verify_pin(self, card_number: str, pin: str) -> bool:
+        if card_number in self._blocked:                 # FR-03
+            return False
         acc = self._accounts.get(card_number)
         return acc is not None and acc["pin"] == pin
 
@@ -125,6 +131,9 @@ class BankGateway:
 
     def change_pin(self, card_number: str, new_pin: str) -> None:
         self._bank.change_pin(card_number, new_pin)
+
+    def block_card(self, card_number: str) -> None:
+        self._bank.block_card(card_number)
 
     def balance(self, card_number: str) -> int:
         return self._bank.balance(card_number)
