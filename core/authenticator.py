@@ -13,6 +13,7 @@ class Authenticator:
         if self.gateway.verify_pin(card.number, pin):
             return True
         if attempts_done + 1 >= self.max_attempts:      # FR-03: ліміт спроб
+            self.gateway.block_card(card.number)        # FR-03: блокування в банку
             self.journal.write("AUTH", "auth", "BLOCKED",
                                {"card": card.number, "attempts": attempts_done + 1})
             raise AuthError("картку заблоковано")
