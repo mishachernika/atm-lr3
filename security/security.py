@@ -62,7 +62,7 @@ class SecurityService:
 
     def check_tamper(self) -> None:
         """FR-18: виявлення втручання, блокування, сповіщення банку."""
-        if self.sensor.tampered:
+        if self.sensor.tampered and not self.alarm:
             self.alarm = True
             self.journal.write("SEC", "security", "TAMPER",
                                {"action": "операції зупинено"})
@@ -70,6 +70,7 @@ class SecurityService:
 
     def guard(self) -> None:
         """Викликається перед кожною операцією; у стані тривоги — відмова."""
+        self.check_tamper()                   # опитування датчика втручання (FR-18)
         if self.alarm:
             raise SecurityError("операції заблоковано службою безпеки")
 
