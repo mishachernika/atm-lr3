@@ -47,6 +47,10 @@ class DepositTransaction(Transaction):
 
     def execute(self, amount: int) -> Receipt:
         self.amount = amount
+        if amount <= 0:                                           # FR-12
+            self.journal.write(self.id, "deposit", "DECLINED",
+                               {"reason": "некоректна сума", "amount": amount})
+            return Receipt(self.id, amount, "DECLINED", "некоректна сума")
         accepted = self.acceptor.accept(amount)
         if accepted != amount:
             self.journal.write(self.id, "deposit", "DECLINED",
